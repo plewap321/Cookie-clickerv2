@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Tes styles personnalisés en dessous */
+body {
+  background-color: #1a1a1a;
+  color: white;
+  overflow: hidden; /* Empêche le scroll indésirable */
+  margin: 0;
+  height: 100vh;
+}
