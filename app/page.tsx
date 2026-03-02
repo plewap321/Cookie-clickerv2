@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabaseClient";
 export default function Home() {
   const [cookies, setCookies] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const[isDataLoaded , setIsDataLoaded] = useState(false); 
   const cookiesRef = useRef(cookies);
 
@@ -35,7 +36,7 @@ export default function Home() {
       
       const { data, error } = await supabase
       .from("profiles")
-      .select("cookies")
+      .select("cookies, is_admin")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -43,6 +44,7 @@ export default function Home() {
         console.error("Erreur de chargement :", error.message);
       } else if (data) {
       setCookies(data.cookies || 0);
+      setIsAdmin(data.is_admin || false);
     }
       
       setIsDataLoaded(true);
