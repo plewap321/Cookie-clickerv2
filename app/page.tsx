@@ -123,7 +123,7 @@ export default function Home() {
 
       <button onDoubleClick={goToshop} className="mt-16 w-full max-w-md hover:scale-105 transition-transform">
         <div className="bg-neutral-800 p-6 rounded-3xl border-2 border-neutral-700 hover:border-orange-500 transition-all text-center">
-          <h2 className="text-2xl font-black italic">AMAZON 🛒</h2>
+          <h2 className="text-2xl font-black italic">AMZON 🛒</h2>
         </div>
       </button>
       
