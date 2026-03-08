@@ -12,7 +12,9 @@ export default function ShopPage() {
   // ITEMS simple (tu voulais garder cost, cps, number)
   const ITEMS = [
     { id: "esclave", name: "Esclave", cost: 300, cps: 1, number: 0 },
-    { id: "chef", name: "Chef", cost: 1000, cps: 5, number: 0 },
+    { id: "chef", name: "Chef", cost: 5400, cps: 5, number: 0 },
+    //{ id: "test", name: "test", cost: 0, cps: 5, number: 0 },
+    
   ];
 
   // prix: base * 1.15^owned (arrondi)
@@ -63,7 +65,7 @@ export default function ShopPage() {
       return;
     }
 
-    setLoading(true);
+    setLoading(false);
 
     const newCookies = cookies - cost;
     const newUpgrades = { ...upgradesState, [item.id]: owned + 1 };
@@ -132,15 +134,21 @@ export default function ShopPage() {
                 <button
                   onClick={() => buyItem(it)}
                   disabled={cookies < cost}
-                  className="bg-white text-black px-4 py-2 rounded-full font-bold disabled:opacity-50"
+                  className="bg-white text-black px-4 py-2 rounded-full font-bold disabled:opacity-50 hover:bg-orange-500 transition-colors"
                 >
                   ACHETER
                 </button>
               </div>
             </div>
+          
           );
         })}
       </div>
+      <button 
+      className="mt-10 text-xs text-neutral-600 hover:text-orange-500 transition-colors uppercase tracking-widest font-bold"
+       onClick={() => window.location.href = "/"}>
+        Retours au four
+      </button>
     </main>
   );
 }

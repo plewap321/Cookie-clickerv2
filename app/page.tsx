@@ -2,6 +2,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { getUserCPS } from "@/components/Autocps";
 
 export default function Home() {
   const [cookies, setCookies] = useState(0);
@@ -9,6 +10,8 @@ export default function Home() {
   const [isAdmin, setIsAdmin] = useState(false);
   const[isDataLoaded , setIsDataLoaded] = useState(false); 
   const cookiesRef = useRef(cookies);
+  const [user, setUser] = useState<any>(null);
+  const [cps, setCps] = useState(0); // cookies par seconde
 
   useEffect(() => {
     
@@ -29,6 +32,7 @@ export default function Home() {
         window.location.href = "/login";
         return; 
       }
+      setUser(user);
 
       // 3. Si on arrive ici, il est bien connecté
       console.log("Utilisateur connecté :", user.email, "pseudonyme:", user.user_metadata?.username , "id:", user.id);
@@ -61,6 +65,40 @@ export default function Home() {
     };
   }, []);
 
+  //====== useEffect Pour cps ======
+ const [totalCPS, setTotalCPS] = useState(0);
+
+  useEffect(() => {
+
+    if (!user) return;
+  const loadCPS = async () => {
+    const cps = await getUserCPS(user.id);
+    setTotalCPS(cps);
+    console.log("CPS chargé :", cps);
+  };
+
+  loadCPS();
+}, [user]);
+// add cookie celon cps
+useEffect(() => {
+  if (totalCPS <= 0) return;
+
+  const interval = setInterval(() => {
+    setCookies(prev => prev + totalCPS);
+  }, 1000);
+
+  const saveinterval = setInterval(() => {
+    saveToCloud(cookiesRef.current);
+  }, 5000); // sauvegarde toutes les 5 secondes
+
+  return () => {
+    clearInterval(interval);
+    clearInterval(saveinterval);
+  };
+}, [totalCPS]);
+
+
+//====== FONCTION DE SAUVEGARDE ======
     const saveToCloud = async (newScore: number) => {
       // SI LES DONNÉES NE SONT PAS CHARGÉES, ON ARRÊTE TOUT
       if (!isDataLoaded) return; 
@@ -78,7 +116,7 @@ export default function Home() {
     const newCount = cookies + 1;
     setCookies(newCount);
     
-    // Sauvegarde à chaque 10 clics
+    // Sauvegarde à chaque 10 clics 
     if (newCount % 10 === 0) {
       saveToCloud(newCount);
     }
